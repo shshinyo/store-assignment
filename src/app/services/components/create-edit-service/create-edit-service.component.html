@@ -1,0 +1,157 @@
+<page-component
+  [@animateStagger]="{ value: !editMode() ? '50' : '100' }"
+  [pageTitle]="
+    editMode()
+      ? addEditServiceForm.get('name')?.value
+      : ('newService' | translate)
+  "
+  class="w-full h-full flex flex-col justify-center items-stretch"
+>
+  <div class="h-32 bg-slate-200"></div>
+
+  <div class="flex justify-center items-start">
+    <form
+      *ngIf="!editMode() || (editMode() && dataLoaded()); else loader"
+      [formGroup]="addEditServiceForm"
+      class="w-11/12 h-full grid sm:grid-cols-2 grid-cols-1 sm:gap-3 gap-2 content-start p-0 m-0 -mt-20 pb-10"
+    >
+      <mat-form-field
+        [@animate]="{ value: '*', params: { y: '-40px', delay: '50ms' } }"
+        appearance="fill"
+      >
+        <mat-label>{{ "name" | translate }}</mat-label>
+        <input formControlName="name" matInput />
+        <mat-error>{{ displayErrorMessages["name"] }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field
+        [@animate]="{ value: '*', params: { y: '-40px', delay: '100ms' } }"
+        appearance="fill"
+      >
+        <mat-label>{{ "price" | translate }}</mat-label>
+        <input formControlName="price" matInput type="number" />
+        <mat-icon matSuffix>$</mat-icon>
+        <mat-error>{{ displayErrorMessages["price"] }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field
+        [@animate]="{ value: '*', params: { y: '-40px', delay: '150ms' } }"
+        appearance="fill"
+      >
+        <mat-label>{{ "fromDate" | translate }}</mat-label>
+        <input
+          formControlName="fromDate"
+          matInput
+          [matDatepicker]="fromDate"
+          [max]="addEditServiceForm.get('toDate')?.value"
+        />
+        <mat-error>{{ displayErrorMessages["fromDate"] }}</mat-error>
+
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="fromDate"
+        ></mat-datepicker-toggle>
+
+        <mat-datepicker #fromDate> </mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field
+        [@animate]="{ value: '*', params: { y: '-40px', delay: '200ms' } }"
+        appearance="fill"
+      >
+        <mat-label>{{ "toDate" | translate }}</mat-label>
+        <input
+          formControlName="toDate"
+          matInput
+          [matDatepicker]="toDate"
+          [min]="addEditServiceForm.get('fromDate')?.value"
+        />
+        <mat-error>{{ displayErrorMessages["toDate"] }}</mat-error>
+
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="toDate"
+        ></mat-datepicker-toggle>
+
+        <mat-datepicker #toDate> </mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field
+        [@animate]="{ value: '*', params: { y: '-40px', delay: '250ms' } }"
+        appearance="fill"
+      >
+        <mat-label>{{ "discountPercentage" | translate }}</mat-label>
+        <input formControlName="discountPercentage" matInput type="number" />
+        <mat-icon matSuffix>%</mat-icon>
+        <mat-error>{{ displayErrorMessages["discountPercentage"] }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field
+        [@animate]="{ value: '*', params: { y: '-40px', delay: '300ms' } }"
+        appearance="fill"
+      >
+        <mat-label>{{ "additionalFeesPercentage" | translate }}</mat-label>
+        <input
+          formControlName="additionalFeesPercentage"
+          matInput
+          type="number"
+        />
+        <mat-icon matSuffix>%</mat-icon>
+        <mat-error>{{
+          displayErrorMessages["additionalFeesPercentage"]
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field
+        [@animate]="{ value: '*', params: { y: '-40px', delay: '350ms' } }"
+        appearance="fill"
+      >
+        <mat-label>{{ "description" | translate }}</mat-label>
+        <textarea formControlName="desc" matInput rows="2"></textarea>
+        <mat-error>{{ displayErrorMessages["desc"] }}</mat-error>
+      </mat-form-field>
+
+      <div
+        [@animate]="{ value: '*', params: { y: '-40px', delay: '400ms' } }"
+        class="flex justify-center items-center gap-3"
+      >
+        <app-button
+          [matType]="buttonTypes.raised"
+          [color]="buttonColors.warn"
+          [text]="'cancel' | translate"
+          routerLink="/dashboard/services"
+          btnClass="sm:w-40"
+        />
+
+        <app-button
+          [disabled]="addEditServiceForm.invalid || !formChanges"
+          [isLoading]="submitProcess()"
+          [text]="(editMode() ? 'update' : 'save') | translate"
+          [matType]="buttonTypes.raised"
+          [color]="buttonColors.primary"
+          btnClass="sm:w-40"
+          (clicked)="onSubmit()"
+        />
+      </div>
+    </form>
+  </div>
+</page-component>
+
+<ng-template #loader>
+  <div class="p-0 h-auto min-h-[50vh] w-full flex justify-center items-center">
+    <div class="lds-spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</ng-template>

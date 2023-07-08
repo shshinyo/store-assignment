@@ -1,0 +1,45 @@
+<nav
+  [@animateStagger]="{ value: '100' }"
+  class="side-nav w-full relative h-screen flex flex-col justify-between items-stretch p-0"
+>
+  <ul class="outline-none flex flex-col justify-center items-center gap-3 py-4">
+    <span
+      [@animate]="{ value: '*', params: { y: '-20px', delay: '500ms' } }"
+      routerLink="/"
+      class="sm:text-2xl text-lg sm:font-bold font-medium cursor-pointer py-2"
+      >Store</span
+    >
+
+    <ng-container *ngFor="let item of menuItems">
+      <a
+        *ngIf="isSmallScreen || (!isSmallScreen && sideToggled())"
+        [@animate]="{ value: '*', params: { y: '-20px', delay: '100ms' } }"
+        class="nav-item"
+        [routerLink]="item?.link"
+        routerLinkActive="active-route"
+        (click)="onSelectTap()"
+      >
+        <mat-icon style="height: 40px; width: 40px; font-size: 40px">{{
+          item?.icon
+        }}</mat-icon>
+      </a>
+
+      <a
+        *ngIf="!isSmallScreen && !sideToggled()"
+        [@animate]="{ value: '*', params: { y: '-20px', delay: '100ms' } }"
+        class="nav-item-lg"
+        [routerLink]="item?.link"
+        routerLinkActive="active-route-lg"
+        (click)="onSelectTap()"
+      >
+        <mat-icon style="height: 28px; width: 28px; font-size: 28px">{{
+          item?.icon
+        }}</mat-icon>
+
+        <span class="text-lg font-medium">
+          {{ item?.label }}
+        </span>
+      </a>
+    </ng-container>
+  </ul>
+</nav>

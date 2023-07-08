@@ -1,0 +1,27 @@
+.side-nav {
+  background-color: var(--nav-bg);
+  border-left: 1px solid var(--nav-border);
+  overflow-y: auto;
+}
+
+.nav-item {
+  @apply sm:h-[75px] h-[50px]  w-[85%] rounded-md flex flex-col justify-center items-center
+  outline-none text-gray-400 hover:bg-slate-200
+   hover:text-slate-800 hover:shadow-md
+   hover:cursor-pointer font-medium sm:text-[16px] text-[14px] sm:leading-[17px] leading-[15px];
+}
+
+.active-route {
+  @apply shadow-md text-slate-800 sm:text-[18px] text-[16px] sm:leading-[19px] leading-[17px]  bg-slate-200;
+}
+
+.nav-item-lg {
+  @apply sm:py-[9px] p-2 w-[90%] rounded-md flex flex-row justify-start items-center gap-3
+  outline-none text-gray-400 hover:bg-slate-200
+   hover:text-slate-800 hover:shadow-md
+   hover:cursor-pointer font-medium sm:text-[16px] text-[14px] sm:leading-[17px] leading-[15px];
+}
+
+.active-route-lg {
+  @apply shadow-md text-slate-800 sm:text-[18px] text-[16px] sm:leading-[19px] leading-[17px]  bg-slate-200;
+}

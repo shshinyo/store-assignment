@@ -1,0 +1,18 @@
+<section class="w-full flex flex-row justify-start items-start m-0" dir="ltr">
+  <div
+    *ngIf="(isSmallScreen() && sideToggled()) || !isSmallScreen()"
+    class="drawer h-full w-28 print:hidden"
+    [ngClass]="{ 'sm:w-28': sideToggled(), 'sm:w-64': !sideToggled() }"
+  >
+    <app-side-nav
+      class="md:px-0 sm:px-15 px-20"
+      [isSmallScreen]="isSmallScreen()"
+    ></app-side-nav>
+  </div>
+
+  <div class="min-h-screen w-full">
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</section>

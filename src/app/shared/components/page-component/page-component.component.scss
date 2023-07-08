@@ -1,0 +1,9 @@
+.toolbar {
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+.mat-toolbar-row,
+.mat-toolbar-single-row {
+  @apply sm:px-2 px-1;
+}
