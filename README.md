@@ -14,6 +14,7 @@ A web application to show Categories with Products for user and the admin can ma
 
 Project is created with:
 
+- PWA
 - Angular 16
   - Using Signals
   - Required inputs
