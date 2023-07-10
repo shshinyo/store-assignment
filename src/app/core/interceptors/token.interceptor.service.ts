@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { StatusCodes } from '../api/models/status-codes';
+import { StatusCodes } from '../utils/models/status-codes';
 import { LocalStorageService } from '../services/local-storage.service';
 import { LoginResponse } from '../utils/login-user.interface';
 

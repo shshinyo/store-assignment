@@ -15,6 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogComponent } from './components/dialog/dialog-ui.component';
 import { HighlightDirective } from './directives/highlight.directive';
 import { PageComponentComponent } from './components/page-component/page-component.component';
+import { PromotionFormFieldComponent } from './forms/promotion-form-field/promotion-form-field.component';
 
 const DIRECTIVES: any[] = [HighlightDirective];
 
@@ -35,6 +36,7 @@ const THIRD_MODULES: any[] = [
   MagicSearchInputComponent,
   NgOptimizedImage,
   TranslateModule,
+  PromotionFormFieldComponent,
 ];
 
 const COMMON_MODULES: any[] = [CommonModule, FormsModule, ReactiveFormsModule];

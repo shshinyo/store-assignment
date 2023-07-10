@@ -144,18 +144,6 @@
           <no-data [text]="'noData' | translate"> </no-data>
         </ng-template>
       </app-table>
-
-      <div
-        *ngIf="productListController.dataLoaded"
-        [@animate]="{ value: '*', params: { y: '80px', delay: '700ms' } }"
-        cdkDrag
-        class="fixed sm:bottom-[80px] bottom-[40px] sm:right-[80px] right-[40px] z-50 h-20 min-w-28 flex flex-col justify-center items-center mat-elevation-z7 rounded-md bg-white px-2 cursor-move"
-      >
-        <span class="font-semibold text-2xl truncate">{{
-          productListController.totalPrice | number : "1.2-2"
-        }}</span>
-        <span class="font-medium text-xs">{{ "totalPrice" | translate }}</span>
-      </div>
     </div>
   </div>
 </page-component>

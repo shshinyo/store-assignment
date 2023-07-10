@@ -8,4 +8,8 @@ export const AddEditServicesErrorMessages: ValidatorMessages = {
   },
   fromDate: { required: 'From date is required' },
   toDate: { required: 'To date is required' },
+  additionalFeesPercentage: {
+    min: 'Additional fees percentage should not be less than 0',
+    max: 'Additional fees percentage should not be grater than 100',
+  },
 };

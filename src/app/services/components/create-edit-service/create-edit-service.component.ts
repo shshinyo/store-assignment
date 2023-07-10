@@ -38,11 +38,12 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ServicesService } from '../../services/services.service';
 import { GetService } from '../../utils/interfaces/services.interface';
 import { CreateEditServicePayload } from '../../utils/interfaces/add-edit-service.interface';
 import { AddEditServicesErrorMessages } from '../../utils/error-messages/add-edit-services-error-messages';
+import { Promotion } from '@shared/utils/interfaces/promotion-form-group.interface';
 
 @Component({
   selector: 'app-create-edit-service',
@@ -72,10 +73,14 @@ export class CreateEditServiceComponent
       name: ['', [Validators.required]],
       price: [0, [Validators.required, Validators.min(1)]],
       desc: [''],
-      fromDate: [new Date(), Validators.required],
-      toDate: [new Date(), Validators.required],
-      discountPercentage: [0],
-      additionalFeesPercentage: [0],
+      promotion: [
+        {
+          fromDate: new Date(),
+          toDate: new Date(),
+          discountPercentage: 0,
+        } as Promotion,
+      ],
+      additionalFeesPercentage: [0, [Validators.min(0), Validators.max(100)]],
     });
 
   public serviceId: WritableSignal<string | null> = signal(null);
@@ -85,6 +90,20 @@ export class CreateEditServiceComponent
   public dataLoaded: WritableSignal<boolean> = signal(false);
 
   public submitProcess: WritableSignal<boolean> = signal(false);
+
+  public totalPriceAfterDesc: Signal<number> = toSignal(
+    this.addEditServiceForm.valueChanges.pipe(
+      map(
+        (val) =>
+          (val.price || 0) -
+          (((val?.promotion?.discountPercentage || 0) +
+            (val.additionalFeesPercentage || 0)) /
+            100) *
+            (val.price || 0)
+      )
+    ) as Observable<number>,
+    { initialValue: 0 }
+  );
 
   public buttonTypes = ButtonTypes;
 
@@ -132,17 +151,16 @@ export class CreateEditServiceComponent
       data: {
         id: this.serviceId(),
         name: this.addEditServiceForm.value?.name,
-        fromDate: this.addEditServiceForm.value?.fromDate,
-        toDate: this.addEditServiceForm.value?.toDate,
+        fromDate: this.addEditServiceForm.value.promotion?.fromDate,
+        toDate: this.addEditServiceForm.value.promotion?.toDate,
         desc: this.addEditServiceForm.value?.desc,
         price: this.addEditServiceForm.value?.price + '$',
         discountPercentage:
-          this.addEditServiceForm.value?.discountPercentage + '%',
+          this.addEditServiceForm.value.promotion?.discountPercentage + '%',
         additionalFeesPercentege:
           this.addEditServiceForm.value?.additionalFeesPercentage + '%',
       },
     } as CreateEditServicePayload;
-
     this.submitProcess.set(true);
     this.editMode()
       ? this._updateHandler(payload)
@@ -193,28 +211,38 @@ export class CreateEditServiceComponent
           this._servicesService.getService(Number(prodId))
         ),
         tap((service: GetService) => {
-          this.addEditServiceForm.patchValue({
-            ...(service?.data?.attributes as any),
-            price: Number(
-              (service?.data?.attributes?.price || '0').replace(/[$]/g, '')
-            ),
-            discountPercentage: Number(
-              (service?.data?.attributes?.discountPercentage || '0').replace(
-                /[%]/g,
-                ''
-              )
-            ),
-            additionalFeesPercentage: Number(
-              (
-                service?.data?.attributes?.additionalFeesPercentege || '0'
-              ).replace(/[%]/g, '')
-            ),
-          });
+          this._patchFormData(service);
+
           this.dataLoaded.set(true);
           this._cashedFormValues = this.addEditServiceForm.getRawValue();
         }),
         takeUntilDestroyed(this._destroyRef)
       )
       .subscribe();
+  };
+
+  private _patchFormData = (service: GetService): void => {
+    this.addEditServiceForm.patchValue({
+      ...(service?.data?.attributes as any),
+      price: Number(
+        (service?.data?.attributes?.price || '0').replace(/[$]/g, '')
+      ),
+      promotion: {
+        fromDate: service?.data?.attributes?.fromDate,
+        toDate: service?.data?.attributes?.toDate,
+        discountPercentage: Number(
+          (service?.data.attributes?.discountPercentage || '0').replace(
+            /[%]/g,
+            ''
+          )
+        ),
+      },
+      additionalFeesPercentage: Number(
+        (service?.data?.attributes?.additionalFeesPercentege || '0').replace(
+          /[%]/g,
+          ''
+        )
+      ),
+    });
   };
 }

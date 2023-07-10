@@ -43,6 +43,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { ProductsService } from '../../services/products.service';
 import { GetProduct } from '../../utils/interfaces/products.interface';
 import { CreateEditProductPayload } from '../../utils/interfaces/add-edit-product.interface';
+import { Promotion } from '@shared/utils/interfaces/promotion-form-group.interface';
 
 @Component({
   selector: 'create-edit-product',
@@ -73,10 +74,28 @@ export class CreateEditProductComponent
       name: ['', [Validators.required]],
       price: [0, [Validators.required, Validators.min(1)]],
       desc: [''],
-      fromDate: [new Date(), Validators.required],
-      toDate: [new Date(), Validators.required],
-      discountPercentage: [0],
+      promotion: [
+        {
+          fromDate: new Date(),
+          toDate: new Date(),
+          discountPercentage: 0,
+        } as Promotion,
+      ],
     });
+
+  public buttonTypes = ButtonTypes;
+
+  public buttonColors = ButtonColors;
+
+  public displayErrorMessages: DisplayErrorMessage = {};
+
+  public prodId: WritableSignal<string | null> = signal(null);
+
+  public editMode: Signal<boolean> = computed(() => !!this.prodId());
+
+  public dataLoaded: WritableSignal<boolean> = signal(false);
+
+  public submitProcess: WritableSignal<boolean> = signal(false);
 
   public imageUrl: Signal<string> = toSignal(
     this.addEditProductForm
@@ -87,19 +106,16 @@ export class CreateEditProductComponent
     { initialValue: '' as string }
   );
 
-  public prodId: WritableSignal<string | null> = signal(null);
-
-  public editMode: Signal<boolean> = computed(() => !!this.prodId());
-
-  public dataLoaded: WritableSignal<boolean> = signal(false);
-
-  public submitProcess: WritableSignal<boolean> = signal(false);
-
-  public buttonTypes = ButtonTypes;
-
-  public buttonColors = ButtonColors;
-
-  public displayErrorMessages: DisplayErrorMessage = {};
+  public totalPriceAfterDesc: Signal<number> = toSignal(
+    this.addEditProductForm.valueChanges.pipe(
+      map(
+        (val) =>
+          (val.price || 0) -
+          ((val?.promotion?.discountPercentage || 0) / 100) * (val.price || 0)
+      )
+    ) as Observable<number>,
+    { initialValue: 0 }
+  );
 
   private readonly _genericValidator =
     new GenericValidatorController<AddEditProductFormGroup>(
@@ -140,14 +156,19 @@ export class CreateEditProductComponent
     const payload: CreateEditProductPayload = {
       data: {
         id: this.prodId(),
-        ...this.addEditProductForm.value,
+        name: this.addEditProductForm.value?.name,
+        imageUrl: this.addEditProductForm.value?.imageUrl,
         price: this.addEditProductForm.value?.price + '$',
+        desc: this.addEditProductForm.value?.desc,
+        fromDate: this.addEditProductForm.value.promotion?.fromDate,
+        toDate: this.addEditProductForm.value.promotion?.toDate,
         discountPercentage:
-          this.addEditProductForm.value?.discountPercentage + '%',
+          this.addEditProductForm.value.promotion?.discountPercentage + '%',
       },
     } as CreateEditProductPayload;
 
     this.submitProcess.set(true);
+
     this.editMode()
       ? this._updateHandler(payload)
       : this._createHandler(payload);
@@ -197,23 +218,26 @@ export class CreateEditProductComponent
           this._productsService.getProduct(Number(prodId))
         ),
         tap((prod: GetProduct) => {
-          this.addEditProductForm.patchValue({
-            ...(prod?.data?.attributes as any),
-            price: Number(
-              (prod?.data.attributes?.price || '0').replace(/[$]/g, '')
-            ),
-            discountPercentage: Number(
-              (prod?.data.attributes?.discountPercentage || '0').replace(
-                /[%]/g,
-                ''
-              )
-            ),
-          });
+          this._patchFormData(prod);
           this.dataLoaded.set(true);
           this._cashedFormValues = this.addEditProductForm.getRawValue();
         }),
         takeUntilDestroyed(this._destroyRef)
       )
       .subscribe();
+  };
+
+  private _patchFormData = (prod: GetProduct): void => {
+    this.addEditProductForm.patchValue({
+      ...(prod?.data?.attributes as any),
+      price: Number((prod?.data.attributes?.price || '0').replace(/[$]/g, '')),
+      promotion: {
+        fromDate: (prod?.data?.attributes as any)?.fromDate,
+        toDate: (prod?.data?.attributes as any)?.toDate,
+        discountPercentage: Number(
+          (prod?.data.attributes?.discountPercentage || '0').replace(/[%]/g, '')
+        ),
+      },
+    });
   };
 }

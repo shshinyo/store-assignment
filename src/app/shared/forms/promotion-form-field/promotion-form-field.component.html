@@ -1,0 +1,57 @@
+<form
+  [@animateStagger]="{ value: '100' }"
+  [formGroup]="promotionFormGroup"
+  class="grid sm:grid-cols-2 grid-cols-1 sm:gap-3 gap-2 content-start p-0 m-0"
+>
+  <mat-form-field
+    [@animate]="{ value: '*', params: { y: '-40px', delay: '400ms' } }"
+    appearance="fill"
+  >
+    <mat-label>{{ "fromDate" | translate }}</mat-label>
+    <input
+      formControlName="fromDate"
+      matInput
+      [matDatepicker]="fromDate"
+      [max]="promotionFormGroup.get('toDate')?.value"
+    />
+
+    <mat-error>{{ displayErrorMessages["fromDate"] }}</mat-error>
+
+    <mat-datepicker-toggle
+      matIconSuffix
+      [for]="fromDate"
+    ></mat-datepicker-toggle>
+
+    <mat-datepicker #fromDate> </mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field
+    [@animate]="{ value: '*', params: { y: '-40px', delay: '450ms' } }"
+    appearance="fill"
+  >
+    <mat-label>{{ "toDate" | translate }}</mat-label>
+    <input
+      formControlName="toDate"
+      matInput
+      [matDatepicker]="toDate"
+      [min]="promotionFormGroup.get('fromDate')?.value"
+    />
+    <mat-error>{{ displayErrorMessages["toDate"] }}</mat-error>
+
+    <mat-datepicker-toggle matIconSuffix [for]="toDate"></mat-datepicker-toggle>
+
+    <mat-datepicker #toDate> </mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field
+    [@animate]="{ value: '*', params: { y: '-40px', delay: '500ms' } }"
+    appearance="fill"
+  >
+    <mat-label>{{ "discountPercentage" | translate }}</mat-label>
+    <input formControlName="discountPercentage" matInput type="number" />
+    <mat-icon matSuffix>%</mat-icon>
+    <mat-error>{{ displayErrorMessages["discountPercentage"] }}</mat-error>
+  </mat-form-field>
+
+  <ng-content></ng-content>
+</form>

@@ -1,11 +1,10 @@
 import { FormControl } from '@angular/forms';
+import { Promotion } from '@shared/utils/interfaces/promotion-form-group.interface';
 
 export interface AddEditServiceFormGroup {
   name: FormControl<string | null>;
   price: FormControl<number | null>;
   desc: FormControl<string | null>;
-  fromDate: FormControl<Date | null>;
-  toDate: FormControl<Date | null>;
-  discountPercentage: FormControl<number | null>;
+  promotion: FormControl<Promotion | null>;
   additionalFeesPercentage: FormControl<number | null>;
 }

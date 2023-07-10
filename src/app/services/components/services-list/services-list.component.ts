@@ -152,13 +152,6 @@ export class ServicesListComponent {
 
           this.servicesListController.totalLength =
             res?.meta?.pagination?.total;
-
-          this.servicesListController.totalPrice = res?.data.reduce(
-            (acc, prod: Datum) =>
-              acc +
-              Number((prod?.attributes?.price || '0').replace(/[$]/g, '')),
-            0
-          );
         }
         this.servicesListController.dataLoaded = true;
       })

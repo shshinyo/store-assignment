@@ -151,13 +151,6 @@ export class ProductsListComponent implements OnInit {
           );
 
           this.productListController.totalLength = res?.meta?.pagination?.total;
-
-          this.productListController.totalPrice = res?.data.reduce(
-            (acc, prod: Datum) =>
-              acc +
-              Number((prod?.attributes?.price || '0').replace(/[$]/g, '')),
-            0
-          );
         }
         this.productListController.dataLoaded = true;
       })

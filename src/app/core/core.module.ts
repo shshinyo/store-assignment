@@ -5,14 +5,13 @@ import {
   SkipSelf,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ToastrModule } from 'ngx-toastr';
 
 import { EnsureModuleLoadedOnceGuard } from './guards/loaded-once.guard';
 
-import { ErrorInterceptorService } from 'src/app/core/interceptors/error-interceptor.service';
 import { NgxTranslateModule } from './ngx-translate.module';
 import { NgxProgressBarModule } from './ngx-progressbar.module';
 import { HttpInterceptorsProviders } from './interceptors';

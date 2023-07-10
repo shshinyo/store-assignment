@@ -15,6 +15,18 @@
       [formGroup]="addEditServiceForm"
       class="w-11/12 h-full grid sm:grid-cols-2 grid-cols-1 sm:gap-3 gap-2 content-start p-0 m-0 -mt-20 pb-10"
     >
+      <div
+        [@animate]="{ value: '*', params: { x: '500px', delay: '300ms' } }"
+        class="h-28 flex flex-col justify-center items-center shadow-md rounded-md bg-white border-2 border-slate-300 p-4"
+      >
+        <span class="font-semibold text-2xl truncate">{{
+          totalPriceAfterDesc() | number : "1.2-2"
+        }}</span>
+        <span class="font-medium text-xs">{{ "totalPrice" | translate }}</span>
+      </div>
+
+      <div class="sm:visible invisible"></div>
+
       <mat-form-field
         [@animate]="{ value: '*', params: { y: '-40px', delay: '50ms' } }"
         appearance="fill"
@@ -34,73 +46,23 @@
         <mat-error>{{ displayErrorMessages["price"] }}</mat-error>
       </mat-form-field>
 
-      <mat-form-field
-        [@animate]="{ value: '*', params: { y: '-40px', delay: '150ms' } }"
-        appearance="fill"
-      >
-        <mat-label>{{ "fromDate" | translate }}</mat-label>
-        <input
-          formControlName="fromDate"
-          matInput
-          [matDatepicker]="fromDate"
-          [max]="addEditServiceForm.get('toDate')?.value"
-        />
-        <mat-error>{{ displayErrorMessages["fromDate"] }}</mat-error>
-
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="fromDate"
-        ></mat-datepicker-toggle>
-
-        <mat-datepicker #fromDate> </mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field
-        [@animate]="{ value: '*', params: { y: '-40px', delay: '200ms' } }"
-        appearance="fill"
-      >
-        <mat-label>{{ "toDate" | translate }}</mat-label>
-        <input
-          formControlName="toDate"
-          matInput
-          [matDatepicker]="toDate"
-          [min]="addEditServiceForm.get('fromDate')?.value"
-        />
-        <mat-error>{{ displayErrorMessages["toDate"] }}</mat-error>
-
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="toDate"
-        ></mat-datepicker-toggle>
-
-        <mat-datepicker #toDate> </mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field
-        [@animate]="{ value: '*', params: { y: '-40px', delay: '250ms' } }"
-        appearance="fill"
-      >
-        <mat-label>{{ "discountPercentage" | translate }}</mat-label>
-        <input formControlName="discountPercentage" matInput type="number" />
-        <mat-icon matSuffix>%</mat-icon>
-        <mat-error>{{ displayErrorMessages["discountPercentage"] }}</mat-error>
-      </mat-form-field>
-
-      <mat-form-field
-        [@animate]="{ value: '*', params: { y: '-40px', delay: '300ms' } }"
-        appearance="fill"
-      >
-        <mat-label>{{ "additionalFeesPercentage" | translate }}</mat-label>
-        <input
-          formControlName="additionalFeesPercentage"
-          matInput
-          type="number"
-        />
-        <mat-icon matSuffix>%</mat-icon>
-        <mat-error>{{
-          displayErrorMessages["additionalFeesPercentage"]
-        }}</mat-error>
-      </mat-form-field>
+      <promotion-form-field class="sm:col-span-2" formControlName="promotion">
+        <mat-form-field
+          [@animate]="{ value: '*', params: { y: '-40px', delay: '300ms' } }"
+          appearance="fill"
+        >
+          <mat-label>{{ "additionalFeesPercentage" | translate }}</mat-label>
+          <input
+            formControlName="additionalFeesPercentage"
+            matInput
+            type="number"
+          />
+          <mat-icon matSuffix>%</mat-icon>
+          <mat-error>{{
+            displayErrorMessages["additionalFeesPercentage"]
+          }}</mat-error>
+        </mat-form-field>
+      </promotion-form-field>
 
       <mat-form-field
         [@animate]="{ value: '*', params: { y: '-40px', delay: '350ms' } }"
